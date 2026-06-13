@@ -1,5 +1,9 @@
 # skillcheck
 
+[![CI](https://github.com/RiriXt1/skillcheck/actions/workflows/ci.yml/badge.svg)](https://github.com/RiriXt1/skillcheck/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
+
 A linter for [Agent Skills](https://github.com/anthropics/skills) — the `SKILL.md` files that teach Claude, Codex, Cursor, and other agents how to do things.
 
 The skill format went open in late 2025 and people started shipping dozens, then hundreds of them. The problem shows up fast: a skill with no `description` never gets picked. Two skills with near-identical descriptions make the agent flip a coin. A skill someone copy-pasted an API key into gets committed to a public repo. None of that throws an error — it just quietly makes your agent worse.
