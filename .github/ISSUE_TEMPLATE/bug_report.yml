@@ -1,0 +1,38 @@
+---
+name: Bug Report
+about: Report a bug or unexpected behavior in skillcheck
+title: "[bug] "
+labels: bug
+assignees: ''
+---
+
+## Environment
+
+- `skillcheck` version: <!-- run `skillcheck --version` -->
+- Python version: <!-- run `python --version` -->
+- OS: <!-- e.g., Ubuntu 22.04, macOS 14, Windows 11 -->
+- Installation method: <!-- pip, editable, from source -->
+
+## What Happened
+
+<!-- A clear description of the bug. -->
+
+## Expected Behavior
+
+<!-- What you expected to happen. -->
+
+## Reproduction
+
+```bash
+# Minimal steps to reproduce the issue
+```
+
+```markdown
+<!-- Paste the SKILL.md content that triggers the bug. Redact any secrets. -->
+```
+
+## Output
+
+```
+<!-- Paste the actual output from skillcheck here. -->
+```

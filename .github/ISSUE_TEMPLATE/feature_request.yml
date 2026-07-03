@@ -1,0 +1,25 @@
+---
+name: Feature Request
+about: Suggest a new rule or improvement for skillcheck
+title: "[feat] "
+labels: enhancement
+assignees: ''
+---
+
+## What
+
+<!-- What rule, check, or feature do you want added? -->
+
+## Why
+
+<!-- What problem does this solve? What kind of skill file triggers the issue? -->
+
+## Proposed Behavior
+
+<!-- How should skillcheck behave? Describe the rule or output. -->
+
+## Example
+
+```markdown
+<!-- A sample SKILL.md that should trigger the proposed check. -->
+```

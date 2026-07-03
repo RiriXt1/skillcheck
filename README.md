@@ -3,20 +3,30 @@
 [![CI](https://github.com/RiriXt1/skillcheck/actions/workflows/ci.yml/badge.svg)](https://github.com/RiriXt1/skillcheck/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
+[![Tests](https://img.shields.io/badge/tests-15%20passing-brightgreen.svg)](tests/)
 
 A linter for [Agent Skills](https://github.com/anthropics/skills) — the `SKILL.md` files that teach Claude, Codex, Cursor, and other agents how to do things.
 
-The skill format went open in late 2025 and people started shipping dozens, then hundreds of them. The problem shows up fast: a skill with no `description` never gets picked. Two skills with near-identical descriptions make the agent flip a coin. A skill someone copy-pasted an API key into gets committed to a public repo. None of that throws an error — it just quietly makes your agent worse.
+The skill format went open in late 2025. People started shipping dozens, then hundreds of them. The problems show up fast:
 
-`skillcheck` catches those before they ship.
+- A skill with no `description` never gets picked.
+- Two skills with near-identical descriptions make the agent flip a coin.
+- A skill someone copy-pasted an API key into gets committed to a public repo.
+
+None of that throws an error. It just quietly makes your agent worse. `skillcheck` catches it before it ships.
 
 ## What it checks
 
-- **Frontmatter** — every `SKILL.md` needs a valid `name` and a `description`. Missing or malformed ones are errors; oversized descriptions are warnings (you pay for them on every agent boot).
-- **Leaked secrets** — AWS keys, OpenAI `sk-` tokens, GitHub PATs, JWTs, private keys, hex wallet keys, and the classic `API_KEY = "..."` assignment. A skill file is the last place you want one.
-- **Duplicate names** — two skills claiming the same `name` is a coin flip for the router.
-- **Trigger collisions** — if two descriptions share most of their keywords, the agent can't tell them apart. This is the bug that makes routing feel flaky. skillcheck measures the keyword overlap and warns you.
-- **Description quality** — too short to route on, or starts with filler like "a skill that helps you...".
+| Rule | Severity | Description |
+|------|----------|-------------|
+| `frontmatter` | Error | Missing `name` or `description`, malformed YAML |
+| `frontmatter.name` | Warn | Name not lowercase, too long, invalid chars |
+| `frontmatter.description` | Warn | Description >1024 chars (costs tokens on every boot) |
+| `duplicate-name` | Error | Two skills claiming the same `name` |
+| `secret` | Error | AWS keys, OpenAI tokens, GitHub PATs, JWTs, private keys, hex wallet keys, generic `api_key = "..."` |
+| `description.short` | Warn | Description <20 chars — too short to route on |
+| `description.generic` | Info | Description starts with filler ("a skill that...") |
+| `trigger-collision` | Warn | Two descriptions share ≥60% of keywords — router can't disambiguate |
 
 ## Install
 
@@ -24,7 +34,7 @@ The skill format went open in late 2025 and people started shipping dozens, then
 pip install skillcheck
 ```
 
-## Use
+## Usage
 
 ```bash
 # scan a directory of skills (recursively finds every SKILL.md)
@@ -36,11 +46,17 @@ skillcheck ./skills/pdf/SKILL.md
 # machine-readable output for CI
 skillcheck ./skills --json
 
-# only fail the build on hard errors, let warnings through
+# only fail on hard errors, let warnings through
 skillcheck ./skills --fail-on error
 ```
 
-Exit code is `0` when clean, `1` when something at or above `--fail-on` is found, `2` for usage problems (no skills found, bad path). That's the contract CI cares about.
+Exit codes:
+
+| Code | Meaning |
+|------|---------|
+| `0` | Clean — no findings at or above threshold |
+| `1` | Findings detected at or above `--fail-on` level |
+| `2` | Usage error (no skills found, bad path) |
 
 ### In CI
 
@@ -49,7 +65,7 @@ Exit code is `0` when clean, `1` when something at or above `--fail-on` is found
 - run: skillcheck ./skills --fail-on error
 ```
 
-## Example
+### Example
 
 ```
   skills/pdf/SKILL.md
@@ -67,14 +83,18 @@ Exit code is `0` when clean, `1` when something at or above `--fail-on` is found
 
 It's a linter, not a sandbox. It reads files and matches patterns — it doesn't execute skill scripts or judge whether the *instructions* inside a skill are any good. The secret scan uses well-known token shapes; a homemade secret format won't trip it. Treat a clean run as "no obvious structural problems," not "audited and safe."
 
-## Why it exists
-
-It started as a pile of one-off scripts for keeping one agent's skill library tidy — a frontmatter check here, a router tie-detector there, a secret tripwire bolted on after a near-miss. At some point the scripts were more useful than the cleanup that prompted them, so they got pulled into one tool. If you're maintaining more than a handful of skills, you'll hit the same walls.
-
 ## Contributing
 
-Rules live in `src/skillcheck/rules.py` and each one is a small, independent function with a test in `tests/`. Adding a check is: write the function, add it to `ALL_RULES`, write a fixture that's deliberately broken so you prove it fires. PRs and issues welcome.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding rules, writing tests, and submitting PRs.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting and disclosure policy.
 
 ## License
 
-MIT
+[MIT](LICENSE)
