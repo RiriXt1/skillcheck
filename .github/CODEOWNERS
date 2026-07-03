@@ -1,0 +1,12 @@
+# These owners are responsible for reviewing pull requests.
+# Default owner for everything in the repository.
+*       @RiriXt1
+
+# Source code
+/src/   @RiriXt1
+
+# Tests
+/tests/  @RiriXt1
+
+# CI and workflows
+/.github/ @RiriXt1
